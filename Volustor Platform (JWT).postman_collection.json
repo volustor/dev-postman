@@ -1,0 +1,2905 @@
+{
+	"info": {
+		"_postman_id": "a235a38d-83d2-43ea-b013-534f75e5355c",
+		"name": "Volustor Platform (JWT)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44031118",
+		"_collection_link": "https://volustor-128940.postman.co/workspace/f7312065-8508-49cd-8d03-322ef8e590e2/collection/44031118-a235a38d-83d2-43ea-b013-534f75e5355c?action=share&source=collection_link&creator=44031118"
+	},
+	"item": [
+		{
+			"name": "_setup",
+			"item": [
+				{
+					"name": "GetAccessToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let resp = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.environment.set(\"access_token\", resp.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "content-type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"client_id\":\"{{AUTH0_APP_CLIENT_ID}}\",\n    \"client_secret\":\"{{AUTH0_APP_CLIENT_SECRET}}\",\n    \"audience\":\"https://api.dev.volustor.xyz\",\n    \"grant_type\":\"client_credentials\"\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://auth.dev.volustor.xyz/oauth/token",
+							"protocol": "https",
+							"host": [
+								"auth",
+								"dev",
+								"volustor",
+								"xyz"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						},
+						"description": "Generated from cURL: curl --request POST \\\n  --url https://dev-volustor.us.auth0.com/oauth/token \\\n  --header 'content-type: application/json' \\\n  --data '{\n    \"client_id\":\"GivwDe48egmop6Yc3kMitz7MfRSihYuf\",\n    \"client_secret\":\"5hjjFUV2QpsfWsXAgiKOzOatWJrl7DMvthHrW74PL2FUSSj3HOfNYVet0hSA6dOy\",\n    \"audience\":\"https://api.dev.volustor.xyz\",\n    \"grant_type\":\"client_credentials\"\n  }'"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "portal",
+			"item": [
+				{
+					"name": "_setup",
+					"item": [
+						{
+							"name": "CreateProject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"projectId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Project\",\n    \"code\": \"TP_\",\n    \"extId\": \"111-222-333-444-555\",\n    \"description\": \"Test Description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/account/projects",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"account",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateStage",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"stageId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Stage\",\n    \"scope\": \"workflow.stage.test\",\n    \"order\": \"a10\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/stages",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"stages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateAsset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"assetId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test asset\",\n    \"number\": \"001\",\n    \"extId\": \"EXT-001\",\n    \"extName\": \"EXT-NAME\",\n    \"type\": \"head\",\n    \"captureMethod\": \"array\",\n    \"location\": \"london\",\n    \"capturedAt\": \"2024/07/15\",\n    \"estimatedAt\": \"2024/07/15\",\n    \"deliveredAt\": \"2024/07/15\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateComment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"commentId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"Test comment\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}/comments",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}",
+										"comments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateWatcher",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"watcherId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"projectId\": \"{{projectId}}\",\n    \"stageId\": \"{{stageId}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/user/watchers",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"user",
+										"watchers"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "accounts",
+					"item": [
+						{
+							"name": "ListProjects",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/account/projects",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"account",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListMembers",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/account/members",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"account",
+										"members"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListInvites",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/account/invites",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"account",
+										"invites"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "projects",
+					"item": [
+						{
+							"name": "GetProject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListAssets",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListStages",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/stages",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"stages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateProject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Project\",\n    \"code\": \"TP_\",\n    \"extId\": \"111-222-333-444-555\",\n    \"description\": \"Test Description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "stages",
+					"item": [
+						{
+							"name": "GetStage",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/stages/{{stageId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"stages",
+										"{{stageId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateStage",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample List\",\n    \"scope\": \"workflow.stage.test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/stages/{{stageId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"stages",
+										"{{stageId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "assets",
+					"item": [
+						{
+							"name": "GetAsset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListActivities",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}/activities",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}",
+										"activities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListComments",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}/comments",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}",
+										"comments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateAsset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test asset\",\n    \"number\": \"001\",\n    \"extId\": \"EXT-001\",\n    \"extName\": \"EXT-NAME\",\n    \"priority\": \"none\",\n    \"type\": \"head\",\n    \"captureMethod\": \"array\",\n    \"location\": \"london\",\n    \"thumbnailUrl\": \"\",\n    \"captureDate\": \"2024/07/15\",\n    \"estimatedDeliveryDate\": \"2024/07/15\",\n    \"deliveryDate\": \"2024/07/15\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateThumbnail",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "postman-cloud:///1f019851-df36-4300-8688-cf40a09a8f7e"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}/thumbnails",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}",
+										"thumbnails"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "reports",
+					"item": [
+						{
+							"name": "GetAssetsTypeReport",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/reports/assets/type",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"reports",
+										"assets",
+										"type"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAssetsStageReport",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/reports/assets/stage",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"reports",
+										"assets",
+										"stage"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "watchers",
+					"item": [
+						{
+							"name": "ListWatchers",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/user/watchers",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"user",
+										"watchers"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "exports",
+					"item": [
+						{
+							"name": "ExportCSV",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/exports?format=csv",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"exports"
+									],
+									"query": [
+										{
+											"key": "format",
+											"value": "csv"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "_teardown",
+					"item": [
+						{
+							"name": "DeleteWatcher",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/user/watchers/{{watcherId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"user",
+										"watchers",
+										"{{watcherId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteAsset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteStage",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/stages/{{stageId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"stages",
+										"{{stageId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteProject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "manifest",
+			"item": [
+				{
+					"name": "_setup",
+					"item": [
+						{
+							"name": "CreateProject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"projectId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Project\",\n    \"code\": \"TP_\",\n    \"extId\": \"111-222-333-444-555\",\n    \"description\": \"Test Description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/account/projects",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"account",
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateStage",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"stageId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Stage\",\n    \"scope\": \"workflow.stage.test\",\n    \"order\": \"a10\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/stages",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"stages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateAsset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"assetId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test asset\",\n    \"number\": \"001\",\n    \"extId\": \"EXT-001\",\n    \"extName\": \"EXT-NAME\",\n    \"priority\": \"none\",\n    \"type\": \"head\",\n    \"captureMethod\": \"array\",\n    \"location\": \"london\",\n    \"thumbnailUrl\": \"\",\n    \"captureDate\": \"2024/07/15\",\n    \"estimatedDeliveryDate\": \"2024/07/15\",\n    \"deliveryDate\": \"2024/07/15\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateLease",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"leaseId\", resp.id);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"projectId\": \"{{projectId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"path\": \"manifest/images\",\n    \"name\": \"scene.json\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/leases",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"leases"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "leases",
+					"item": [
+						{
+							"name": "GetLease",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/leases/{{leaseId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"leases",
+										"{{leaseId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "objects",
+					"item": [
+						{
+							"name": "CreateObject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"url\", resp.url);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"path\": \"gallery\",\n    \"name\": \"postman\",\n    \"type\": \"folder\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/create",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"{{projectId}}",
+										"{{assetId}}",
+										"objects",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "StageObject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.environment.set(\"url\", resp.url);"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"path\": \"gallery\",\n    \"name\": \"test%20card.png\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/stage",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"{{projectId}}",
+										"{{assetId}}",
+										"objects",
+										"stage"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PutObject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {
+										"src": "postman-cloud:///1f019851-df36-4300-8688-cf40a09a8f7e"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ListObjects",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Project\",\n    \"code\": \"TP_\",\n    \"extId\": \"111-222-333-444-555\",\n    \"description\": \"Test Description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/list?path=images",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"{{projectId}}",
+										"{{assetId}}",
+										"objects",
+										"list"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "images"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetPreview",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Project\",\n    \"code\": \"TP_\",\n    \"extId\": \"111-222-333-444-555\",\n    \"description\": \"Test Description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/preview?path=gallery/test%20card.png&maxWidth=256&maxHeight=256",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"{{projectId}}",
+										"{{assetId}}",
+										"objects",
+										"preview"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "gallery/test%20card.png"
+										},
+										{
+											"key": "maxWidth",
+											"value": "256"
+										},
+										{
+											"key": "maxHeight",
+											"value": "256"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteObject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Test Project\",\n    \"code\": \"TP_\",\n    \"extId\": \"111-222-333-444-555\",\n    \"description\": \"Test Description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/delete?path=gallery/test%20card.png",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"{{projectId}}",
+										"{{assetId}}",
+										"objects",
+										"delete"
+									],
+									"query": [
+										{
+											"key": "path",
+											"value": "gallery/test%20card.png"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "_teardown",
+					"item": [
+						{
+							"name": "DeleteLease",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/leases/{{leaseId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"manifest",
+										"public",
+										"leases",
+										"{{leaseId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteAsset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/assets/{{assetId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"assets",
+										"{{assetId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteStage",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}/stages/{{stageId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}",
+										"stages",
+										"{{stageId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteProject",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Sample Account\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/portal/public/projects/{{projectId}}",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"portal",
+										"public",
+										"projects",
+										"{{projectId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "queue",
+			"item": [
+				{
+					"name": "_setup",
+					"item": []
+				},
+				{
+					"name": "pipelines",
+					"item": [
+						{
+							"name": "ListPipelines",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/queue/public/pipelines",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"queue",
+										"public",
+										"pipelines"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "jobs",
+					"item": [
+						{
+							"name": "ListJobs",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let resp = pm.response.json();",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"  pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/queue/public/jobs",
+									"protocol": "https",
+									"host": [
+										"api",
+										"{{ENV}}",
+										"volustor",
+										"xyz"
+									],
+									"path": [
+										"v1",
+										"queue",
+										"public",
+										"jobs"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "_teardown",
+					"item": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "_teardown",
+			"item": []
+		}
+	]
+}
