@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "a235a38d-83d2-43ea-b013-534f75e5355c",
-		"name": "Volustor Platform (JWT)",
+		"name": "Volustor API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44031118",
 		"_collection_link": "https://volustor-128940.postman.co/workspace/f7312065-8508-49cd-8d03-322ef8e590e2/collection/44031118-a235a38d-83d2-43ea-b013-534f75e5355c?action=share&source=collection_link&creator=44031118"
