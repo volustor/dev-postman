@@ -1,6 +1,6 @@
 # DEV-POSTMAN
 
-This repository contains Postman collections and template environments that demonstrate usage of the core Volustor APIs.
+This repository contains Postman collections and template environments that demonstrate usage of Volustor's core APIs.
 
 ```
 /auth       - Signin, Signout, Sessions
@@ -9,31 +9,16 @@ This repository contains Postman collections and template environments that demo
 /queue      - Pipelines, Jobs
 ```
 
-These collections are designed to demonstrate "machine-to-machine" communication secured via a JWT access_token in the header of every request.
+These collections are designed to demonstrate "machine-to-machine" communication, secured via JWT access tokens.
 
-To interact with these collections you'll first need an API "Client Id" and "Client Secret" issued by Volustor during account creation.  Please contect [support@volustor.xyz](email:support@volustor.xyz) for more details.
-
-## Authentication
-
-
-```bash
-curl --request POST \
-  --url "https://{{env}}-volustor.us.auth0.com/oauth/token" \
-  --header "content-type: application/json" \
-  --data "{
-    'client_id':'{{client_id}}',
-    'client_secret':'{{client_secret}}',
-    'audience':'https://api.{{env}}.volustor.xyz',
-    'grant_type':'client_credentials'
-  }"
-```
+To uses these collections you'll first need an API "Client Id" and "Client Secret" Issued by Volustor during your account creation process. Please contect [support@volustor.xyz](email:support@volustor.xyz) for more information.
 
 ## Usage
 
-```bash
-curl --request GET \
-    --url <Your API Endpoint> \
-    --header 'authorization: Bearer <Your Access Token>'
-```
+1. Import the collections and environments.
 
+2. Update the required environment with your "Client ID" and "Client Secret".
 
+3. Authenticate via the GetAccessToken method.
+
+4. The generated access_token will then be automatically appended to the header of every future request.
