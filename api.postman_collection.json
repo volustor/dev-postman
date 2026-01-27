@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "a235a38d-83d2-43ea-b013-534f75e5355c",
-		"name": "Volustor API",
+		"_postman_id": "71f81937-62c3-4ec7-8cd1-5da9f34306b3",
+		"name": "Volustor Platform (Cookie)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44031118",
-		"_collection_link": "https://volustor-128940.postman.co/workspace/f7312065-8508-49cd-8d03-322ef8e590e2/collection/44031118-a235a38d-83d2-43ea-b013-534f75e5355c?action=share&source=collection_link&creator=44031118"
+		"_collection_link": "https://volustor-128940.postman.co/workspace/Volustor's-Workspace~f7312065-8508-49cd-8d03-322ef8e590e2/collection/44031118-71f81937-62c3-4ec7-8cd1-5da9f34306b3?action=share&source=collection_link&creator=44031118"
 	},
 	"item": [
 		{
@@ -32,28 +32,62 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "POST",
 						"header": [
 							{
 								"key": "content-type",
-								"value": "application/json"
+								"value": "application/x-www-form-urlencoded"
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"client_id\":\"{{AUTH0_APP_CLIENT_ID}}\",\n    \"client_secret\":\"{{AUTH0_APP_CLIENT_SECRET}}\",\n    \"audience\":\"https://api.dev.volustor.xyz\",\n    \"grant_type\":\"client_credentials\"\n  }",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{USERNAME}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{PASSWORD}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{AUTH0_APP_CLIENT_ID}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{AUTH0_APP_CLIENT_SECRET}}",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "https://portal.{{ENV}}.volustor.xyz:{{PORT}}/auth/callback",
+									"type": "text"
+								},
+								{
+									"key": "audience",
+									"value": "https://api.dev.volustor.xyz",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "https://auth.dev.volustor.xyz/oauth/token",
+							"raw": "https://auth.{{AUTH0_ENV}}.volustor.xyz/oauth/token",
 							"protocol": "https",
 							"host": [
 								"auth",
-								"dev",
+								"{{AUTH0_ENV}}",
 								"volustor",
 								"xyz"
 							],
@@ -61,8 +95,177 @@
 								"oauth",
 								"token"
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SignInAccessToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let resp = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.environment.set(\"accountId\", resp.accounts[0].id);",
+									"pm.environment.set(\"accessToken\", resp.accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						"description": "Generated from cURL: curl --request POST \\\n  --url https://dev-volustor.us.auth0.com/oauth/token \\\n  --header 'content-type: application/json' \\\n  --data '{\n    \"client_id\":\"GivwDe48egmop6Yc3kMitz7MfRSihYuf\",\n    \"client_secret\":\"5hjjFUV2QpsfWsXAgiKOzOatWJrl7DMvthHrW74PL2FUSSj3HOfNYVet0hSA6dOy\",\n    \"audience\":\"https://api.dev.volustor.xyz\",\n    \"grant_type\":\"client_credentials\"\n  }'"
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accessToken\": \"{{access_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.{{ENV}}.volustor.xyz/v1/auth/public/signin/token",
+							"protocol": "https",
+							"host": [
+								"api",
+								"{{ENV}}",
+								"volustor",
+								"xyz"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"public",
+								"signin",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateSession",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let resp = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.environment.set(\"sessionId\", resp.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": \"{{accountId}}\",\n    \"accessToken\": \"{{accessToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.{{ENV}}.volustor.xyz/v1/auth/public/sessions",
+							"protocol": "https",
+							"host": [
+								"api",
+								"{{ENV}}",
+								"volustor",
+								"xyz"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"public",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSession",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let resp = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.environment.set(\"sessionId\", resp.id);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.{{ENV}}.volustor.xyz/v1/auth/public/sessions",
+							"protocol": "https",
+							"host": [
+								"api",
+								"{{ENV}}",
+								"volustor",
+								"xyz"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"public",
+								"sessions"
+							]
+						}
 					},
 					"response": []
 				}
@@ -96,16 +299,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -159,16 +352,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -223,16 +406,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -287,16 +460,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -353,16 +516,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -394,30 +547,6 @@
 							},
 							"response": []
 						}
-					],
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"type": "text/javascript",
-								"packages": {},
-								"requests": {},
-								"exec": [
-									""
-								]
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"type": "text/javascript",
-								"packages": {},
-								"requests": {},
-								"exec": [
-									""
-								]
-							}
-						}
 					]
 				},
 				{
@@ -443,16 +572,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -495,16 +614,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -547,16 +656,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -604,16 +703,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -656,16 +745,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -709,16 +788,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -762,16 +831,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "PATCH",
 								"header": [],
 								"body": {
@@ -828,16 +887,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -882,16 +931,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "PATCH",
 								"header": [],
 								"body": {
@@ -950,16 +989,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1004,16 +1033,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1059,16 +1078,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1114,16 +1123,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "PATCH",
 								"header": [],
 								"body": {
@@ -1177,16 +1176,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -1247,16 +1236,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1302,16 +1281,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1362,16 +1331,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1417,16 +1376,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1481,16 +1430,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -1543,16 +1482,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -1606,16 +1535,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -1669,16 +1588,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -1712,33 +1621,6 @@
 						}
 					]
 				}
-			],
-			"auth": {
-				"type": "noauth"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {},
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {},
-						"exec": [
-							""
-						]
-					}
-				}
 			]
 		},
 		{
@@ -1769,16 +1651,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -1832,16 +1704,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -1896,16 +1758,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
@@ -1960,21 +1812,11 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"projectId\": \"{{projectId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"path\": \"manifest/images\",\n    \"name\": \"scene.json\"\n}",
+									"raw": "{\n    \"projectId\": \"{{projectId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"path\": \"manifest/gallery\",\n    \"name\": \"3dobject.glb\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2028,16 +1870,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"body": {
@@ -2075,71 +1907,6 @@
 					"name": "objects",
 					"item": [
 						{
-							"name": "CreateObject",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"let resp = pm.response.json();",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"  pm.response.to.have.status(200);",
-											"});",
-											"",
-											"pm.environment.set(\"url\", resp.url);"
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"path\": \"gallery\",\n    \"name\": \"postman\",\n    \"type\": \"folder\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/create",
-									"protocol": "https",
-									"host": [
-										"api",
-										"{{ENV}}",
-										"volustor",
-										"xyz"
-									],
-									"path": [
-										"v1",
-										"manifest",
-										"public",
-										"{{projectId}}",
-										"{{assetId}}",
-										"objects",
-										"create"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "StageObject",
 							"event": [
 								{
@@ -2161,21 +1928,11 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"path\": \"gallery\",\n    \"name\": \"test%20card.png\"\n}",
+									"raw": "{\n    \"path\": \"manifest/gallery/test-card.png\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2216,15 +1973,11 @@
 											"});"
 										],
 										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
+										"packages": {}
 									}
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "noauth"
-								},
 								"method": "PUT",
 								"header": [],
 								"body": {
@@ -2265,16 +2018,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"body": {
@@ -2287,7 +2030,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/list?path=images",
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/list?prefix=manifest/gallery",
 									"protocol": "https",
 									"host": [
 										"api",
@@ -2306,8 +2049,8 @@
 									],
 									"query": [
 										{
-											"key": "path",
-											"value": "images"
+											"key": "prefix",
+											"value": "manifest/gallery"
 										}
 									]
 								}
@@ -2335,16 +2078,6 @@
 								"disableBodyPruning": true
 							},
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"body": {
@@ -2357,7 +2090,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/preview?path=gallery/test%20card.png&maxWidth=256&maxHeight=256",
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/preview?path=manifest/gallery/test-card.png&maxWidth=256&maxHeight=256",
 									"protocol": "https",
 									"host": [
 										"api",
@@ -2377,7 +2110,7 @@
 									"query": [
 										{
 											"key": "path",
-											"value": "gallery/test%20card.png"
+											"value": "manifest/gallery/test-card.png"
 										},
 										{
 											"key": "maxWidth",
@@ -2412,21 +2145,11 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"Test Project\",\n    \"code\": \"TP_\",\n    \"extId\": \"111-222-333-444-555\",\n    \"description\": \"Test Description\"\n}",
+									"raw": "",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2434,7 +2157,7 @@
 									}
 								},
 								"url": {
-									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/delete?path=gallery/test%20card.png",
+									"raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/objects/delete?path=manifest/gallery/test-card.png",
 									"protocol": "https",
 									"host": [
 										"api",
@@ -2454,7 +2177,7 @@
 									"query": [
 										{
 											"key": "path",
-											"value": "gallery/test%20card.png"
+											"value": "manifest/gallery/test-card.png"
 										}
 									]
 								}
@@ -2486,16 +2209,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -2547,16 +2260,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -2610,16 +2313,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -2673,16 +2366,6 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
 								"method": "DELETE",
 								"header": [],
 								"body": {
@@ -2716,190 +2399,51 @@
 						}
 					]
 				}
-			],
-			"auth": {
-				"type": "noauth"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {},
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {},
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "queue",
-			"item": [
-				{
-					"name": "_setup",
-					"item": []
-				},
-				{
-					"name": "pipelines",
-					"item": [
-						{
-							"name": "ListPipelines",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"let resp = pm.response.json();",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"  pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://api.{{ENV}}.volustor.xyz/v1/queue/public/pipelines",
-									"protocol": "https",
-									"host": [
-										"api",
-										"{{ENV}}",
-										"volustor",
-										"xyz"
-									],
-									"path": [
-										"v1",
-										"queue",
-										"public",
-										"pipelines"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "jobs",
-					"item": [
-						{
-							"name": "ListJobs",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"let resp = pm.response.json();",
-											"",
-											"pm.test(\"Status code is 200\", function () {",
-											"  pm.response.to.have.status(200);",
-											"});"
-										],
-										"type": "text/javascript",
-										"packages": {},
-										"requests": {}
-									}
-								}
-							],
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{access_token}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "https://api.{{ENV}}.volustor.xyz/v1/queue/public/jobs",
-									"protocol": "https",
-									"host": [
-										"api",
-										"{{ENV}}",
-										"volustor",
-										"xyz"
-									],
-									"path": [
-										"v1",
-										"queue",
-										"public",
-										"jobs"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "_teardown",
-					"item": []
-				}
-			],
-			"auth": {
-				"type": "noauth"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {},
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {},
-						"exec": [
-							""
-						]
-					}
-				}
 			]
 		},
 		{
 			"name": "_teardown",
-			"item": []
+			"item": [
+				{
+					"name": "DeleteSession",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://api.{{ENV}}.volustor.xyz/v1/auth/public/sessions",
+							"protocol": "https",
+							"host": [
+								"api",
+								"{{ENV}}",
+								"volustor",
+								"xyz"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"public",
+								"sessions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

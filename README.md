@@ -6,7 +6,6 @@ This repository contains Postman collections and template environments that demo
 /auth       - Signin, Signout, Sessions
 /manifest   - Leases, Objects
 /portal     - Accounts, Assets, Projects, Stages, Users, Watchers
-/queue      - Pipelines, Jobs
 ```
 
 These collections are designed to demonstrate "machine-to-machine" communication, secured via JWT access tokens.
