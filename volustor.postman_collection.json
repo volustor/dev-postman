@@ -1,7 +1,7 @@
 {
   "info": {
     "_postman_id": "97073437-bad2-4399-9cf3-2a13134f392f",
-    "name": "Volustor Platform (Bearer)",
+    "name": "api.volustor.xyz (Bearer)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "44031118",
     "_collection_link": "https://go.postman.co/collection/44031118-97073437-bad2-4399-9cf3-2a13134f392f?source=collection_link"
@@ -61,7 +61,7 @@
                 "oauth",
                 "token"
               ]
-            },
+            }
           },
           "response": []
         }
@@ -2204,9 +2204,31 @@
                   "listen": "test",
                   "script": {
                     "exec": [
-                      "pm.test(\"Status code is 200\", function () {",
-                      "  pm.response.to.have.status(200);",
-                      "});"
+                      "// Max attempts",
+                      "const MAX_ATTEMPTS = 5;",
+                      "",
+                      "// Increment attempt counter",
+                      "let attempts = parseInt(pm.collectionVariables.get(\"attempts\") || \"0\") + 1;",
+                      "pm.collectionVariables.set(\"attempts\", attempts);",
+                      "",
+                      "// Request status",
+                      "const success = pm.response.code === 200;",
+                      "",
+                      "if (success) {",
+                      "    // Success",
+                      "    pm.collectionVariables.set(\"attempts\", 0);",
+                      "    console.log(`Succeeded on attempt ${attempts}`);",
+                      "    pm.execution.setNextRequest(null);",
+                      "} else if (attempts >= MAX_ATTEMPTS) {",
+                      "    // Timed out",
+                      "    pm.collectionVariables.set(\"attempts\", 0);",
+                      "    console.log(`Failed after ${MAX_ATTEMPTS} attempts`);",
+                      "    pm.execution.setNextRequest(null);",
+                      "} else {",
+                      "    // Retry",
+                      "    console.log(`Attempt ${attempts} failed, retrying...`);",
+                      "    pm.execution.setNextRequest(\"DeleteObject\");",
+                      "}"
                     ],
                     "type": "text/javascript",
                     "packages": {},
@@ -2339,6 +2361,129 @@
                       "key": "path",
                       "value": "manifest/gallery/test-card.png"
                     }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "archives",
+          "item": [
+            {
+              "name": "CreateArchive",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let resp = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.environment.set(\"archiveId\", resp.id);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"paths\": [\n        \"manifest/outputs/preview\",\n        \"manifest/input/images/image.png\"\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/archives",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "{{ENV}}",
+                    "volustor",
+                    "xyz"
+                  ],
+                  "path": [
+                    "v1",
+                    "manifest",
+                    "public",
+                    "{{projectId}}",
+                    "{{assetId}}",
+                    "archives"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetArchive",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let resp = pm.response.json();",
+                      "",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "  pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{access_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://api.{{ENV}}.volustor.xyz/v1/manifest/public/{{projectId}}/{{assetId}}/archives/{{archiveId}}",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "{{ENV}}",
+                    "volustor",
+                    "xyz"
+                  ],
+                  "path": [
+                    "v1",
+                    "manifest",
+                    "public",
+                    "{{projectId}}",
+                    "{{assetId}}",
+                    "archives",
+                    "{{archiveId}}"
                   ]
                 }
               },
